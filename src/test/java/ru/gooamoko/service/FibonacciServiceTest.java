@@ -16,7 +16,7 @@ class FibonacciServiceTest {
     private static final int COUNT = 100;
 
     @Test
-    public void testSerial() throws Exception {
+    public void testSerial() {
         FibonacciService service = new FibonacciService();
         Set<BigInteger> serialNumbers = new HashSet<>();
         for (int i = 0; i < COUNT; i++) {
