@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FibonacciServiceTest {
     private static final int COUNT = 100;
@@ -29,6 +30,13 @@ class FibonacciServiceTest {
     @Test
     public void testConcurrent() throws Exception {
         FibonacciService service = new FibonacciService();
+        Set<BigInteger> serialNumbers = new HashSet<>();
+        for (int i = 0; i < COUNT; i++) {
+            serialNumbers.add(service.getNext());
+        }
+        assertEquals(COUNT, serialNumbers.size());
+
+        service = new FibonacciService();
         int threads = 10;
         Set<BigInteger> parallelNumbers = new HashSet<>();
         ExecutorService threadPool = Executors.newFixedThreadPool(threads);
@@ -47,6 +55,9 @@ class FibonacciServiceTest {
             }
 
             assertEquals(COUNT, parallelNumbers.size());
+            for (BigInteger number : serialNumbers) {
+                assertTrue(parallelNumbers.contains(number), "No nuumber: " + number.toString());
+            }
         } finally {
             threadPool.shutdown();
         }
