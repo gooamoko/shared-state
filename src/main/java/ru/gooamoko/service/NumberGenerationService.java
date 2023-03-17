@@ -1,13 +1,15 @@
 package ru.gooamoko.service;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Сервис для генерации уникальных номеров
  */
 public class NumberGenerationService {
-    private long number;
+    private final AtomicLong number;
 
     public NumberGenerationService(long initialValue) {
-        this.number = initialValue;
+        this.number = new AtomicLong(initialValue);
     }
 
     /**
@@ -15,6 +17,6 @@ public class NumberGenerationService {
      * @return номер
      */
     public long getNextNumber() {
-        return ++number;
+        return number.incrementAndGet();
     }
 }
