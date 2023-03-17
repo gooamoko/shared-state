@@ -34,12 +34,8 @@ public class Worker implements Callable<String> {
         if (latch != null) {
             latch.await();
         }
-        service.create(a, b, c);
-        return String.format("A [%d = %d], B [%d = %d], C [%d = %d]. Корни: %s",
-                a, service.getA(),
-                b, service.getB(),
-                c, service.getC(),
-                printRoots(service.getRoots()));
+        double[] roots = service.getRoots(a, b, c);
+        return String.format("A %d, B = %d, C = %d. Корни: %s", a, b, c, printRoots(roots));
     }
 
     private String printRoots(double[] roots) {
