@@ -4,15 +4,11 @@ import org.junit.jupiter.api.Test;
 import ru.gooamoko.model.CardItem;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ShoppingCardServiceTest {
     private static final int THREADS_COUNT = 10;
@@ -23,7 +19,7 @@ class ShoppingCardServiceTest {
         UUID userId = UUID.randomUUID();
         Set<CardItem> items = createCardItems();
 
-        // Добавляем пкупки в несколько потоков
+        // Добавляем покупки в несколько потоков
         ExecutorService threadPool = Executors.newFixedThreadPool(THREADS_COUNT);
         try {
             for (CardItem item : items) {
@@ -33,18 +29,49 @@ class ShoppingCardServiceTest {
             threadPool.shutdown();
         }
 
-        // Ждем завершения добавления
-        Thread.sleep(5000);
-        List<CardItem> cardItems = service.getItems(userId);
+        Thread.sleep(5000); // Ждем завершения добавления
+        List<CardItem> cardItems = service.getItems(userId); // Получаем содержимое корзины для пользователя
+
+        // Проверяем, что в корзине есть всё, что мы добавляли
         assertEquals(items.size(), cardItems.size());
         for (CardItem item : cardItems) {
             assertTrue(items.contains(item));
         }
     }
 
+    @Test
+    public void testAddUsersAndItemsConcurrent() throws Exception {
+        // Создаем мапу с данными для теста
+        Map<UUID, CardItem> items = new HashMap<>();
+        for (int i = 0; i < 100; i++) {
+            items.put(UUID.randomUUID(), new CardItem("item-" + i, BigDecimal.ONE, 1));
+        }
+
+        // Добавляем покупки в несколько потоков
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREADS_COUNT);
+        try {
+            for (Map.Entry<UUID, CardItem> entry : items.entrySet()) {
+                threadPool.submit(() -> service.addItem(entry.getKey(), entry.getValue()));
+            }
+        } finally {
+            threadPool.shutdown();
+        }
+
+        Thread.sleep(5000); // Ждем завершения добавления
+
+        // Проверяем, что для каждого из пользователей содержимое корзины соответствует нашим ожиданиям
+        for (Map.Entry<UUID, CardItem> entry : items.entrySet()) {
+            List<CardItem> cardItems = service.getItems(entry.getKey());
+            assertNotNull(cardItems);
+            assertEquals(1, cardItems.size());
+            assertTrue(cardItems.contains(entry.getValue()));
+        }
+    }
+
+    // Создаем список покупок для теста
     private Set<CardItem> createCardItems() {
         Set<CardItem> items = new HashSet<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
             items.add(new CardItem("item-" + i, BigDecimal.ONE, 1));
         }
         return items;
