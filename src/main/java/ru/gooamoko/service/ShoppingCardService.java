@@ -2,13 +2,17 @@ package ru.gooamoko.service;
 
 import ru.gooamoko.model.CardItem;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Сервис корзины покупок.
  */
 public class ShoppingCardService {
-    private final Map<UUID, List<CardItem>> cards = new HashMap<>();
+    private final ConcurrentMap<UUID, List<CardItem>> cards = new ConcurrentHashMap<>();
 
 
     public void addItem(UUID userId, CardItem cardItem) {
