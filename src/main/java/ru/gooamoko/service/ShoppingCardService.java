@@ -16,7 +16,11 @@ public class ShoppingCardService {
 
 
     public void addItem(UUID userId, CardItem cardItem) {
-        cards.compute(userId, (k, v) -> appendList(v, cardItem));
+        cards.compute(userId, (k, v) -> addItemToList(v, cardItem));
+    }
+
+    public void removeItem(UUID userId, CardItem cardItem) {
+        cards.compute(userId, (k, v) -> removeItemFromList(v, cardItem));
     }
 
     public List<CardItem> getItems(UUID userId) {
@@ -29,11 +33,23 @@ public class ShoppingCardService {
     }
 
 
-    private List<CardItem> appendList(List<CardItem> items, CardItem cardItem) {
+    private List<CardItem> addItemToList(List<CardItem> items, CardItem cardItem) {
         if (items == null) {
             items = new LinkedList<>();
         }
         items.add(cardItem);
+        return items;
+    }
+
+    private List<CardItem> removeItemFromList(List<CardItem> items, CardItem cardItem) {
+        if (items == null) {
+            items = new LinkedList<>();
+        }
+
+        if (!items.isEmpty()) {
+            items.remove(cardItem);
+        }
+
         return items;
     }
 }
