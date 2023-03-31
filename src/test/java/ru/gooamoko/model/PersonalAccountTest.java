@@ -8,8 +8,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 class PersonalAccountTest {
+
+    @Test
+    public void testSubtractWithLowFunds() {
+        PersonalAccount testAccount = new PersonalAccount(new BigDecimal("10.00"));
+        assertThrowsExactly(RuntimeException.class, () -> testAccount.subtract(new BigDecimal("20.00")));
+    }
 
     @Test
     public void testAddConcurrent() throws InterruptedException {
