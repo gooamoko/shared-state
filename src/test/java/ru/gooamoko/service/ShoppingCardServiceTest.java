@@ -112,6 +112,60 @@ class ShoppingCardServiceTest {
         }
     }
 
+    @Test
+    public void testAddAndThenRemoveConcurrent() throws Exception {
+        UUID userId = UUID.randomUUID();
+        Set<CardItem> items = createCardItems();
+
+        // Добавляем покупки в несколько потоков
+        ExecutorService threadPool = Executors.newFixedThreadPool(8);
+        try {
+            final CountDownLatch addLatch = new CountDownLatch(items.size());
+            for (CardItem item : items) {
+                //Добавляем покупку
+                threadPool.submit(() -> {
+                    service.addItem(userId, item);
+                    addLatch.countDown();
+                });
+            }
+            addLatch.await();
+
+            List<CardItem> cardItems = service.getItems(userId); // Получаем содержимое корзины для пользователя
+            // Проверяем, что в корзине есть всё, что мы добавляли
+            assertEquals(items.size(), cardItems.size());
+
+            final CountDownLatch removeLatch = new CountDownLatch(items.size());
+            final CountDownLatch threadLatch = new CountDownLatch(2);
+            for (CardItem item : items) {
+                // Получаем список покупок, чтобы вывести их число.
+                threadPool.submit(() -> {
+                    try {
+                        threadLatch.await();
+                        List<CardItem> cardItemList = service.getItems(userId);
+                        System.out.println("Items in shopping card: " + cardItemList.size());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                // Удаляем покупку
+                threadPool.submit(() -> {
+                    try {
+                        service.removeItem(userId, item);
+                        removeLatch.countDown();
+                        threadLatch.await();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                threadLatch.countDown();
+            }
+            removeLatch.await();
+        } finally {
+            threadPool.shutdown();
+        }
+    }
+
     // Создаем список покупок для теста
     private Set<CardItem> createCardItems() {
         Set<CardItem> items = new HashSet<>();
