@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Сервис корзины покупок.
@@ -35,7 +36,7 @@ public class ShoppingCardService {
 
     private List<CardItem> addItemToList(List<CardItem> items, CardItem cardItem) {
         if (items == null) {
-            items = new LinkedList<>();
+            items = new CopyOnWriteArrayList<>();
         }
         items.add(cardItem);
         return items;
@@ -43,7 +44,7 @@ public class ShoppingCardService {
 
     private List<CardItem> removeItemFromList(List<CardItem> items, CardItem cardItem) {
         if (items == null) {
-            items = new LinkedList<>();
+            items = new CopyOnWriteArrayList<>();
         }
 
         if (!items.isEmpty()) {
