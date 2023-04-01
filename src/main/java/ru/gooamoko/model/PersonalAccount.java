@@ -54,8 +54,8 @@ public class PersonalAccount {
      */
     public BigDecimal transferFrom(PersonalAccount from, BigDecimal amount) {
         try {
-            accountLock.lock();
             from.subtract(amount);
+            accountLock.lock();
             fund = fund.add(amount);
         } finally {
             accountLock.unlock();
