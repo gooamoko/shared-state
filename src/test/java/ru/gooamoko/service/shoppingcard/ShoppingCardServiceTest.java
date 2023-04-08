@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  * Тест для сравнения скорости работы разных реализаций
  */
 public class ShoppingCardServiceTest {
-    private static final int THREADS_COUNT = 10;
     private static final int USERS_COUNT = 1000;
     private static final int BROWSE_COUNT = 100;
     private static final int ITEMS_COUNT = 100;
@@ -85,6 +84,7 @@ public class ShoppingCardServiceTest {
             String fileName = tmpPath + String.format("/test_results-%d.csv", i);
             try {
                 File tempFile = new File(fileName);
+                System.out.println("Writing results into file " + fileName);
                 try (FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
                     for (Map.Entry<String, List<Long>> entry : resultsMap.entrySet()) {
                         String row = entry.getKey() + ";" + entry.getValue().stream().map(Object::toString).collect(Collectors.joining(";")) + System.lineSeparator();
