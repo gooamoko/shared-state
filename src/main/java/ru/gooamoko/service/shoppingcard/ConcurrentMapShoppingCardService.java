@@ -1,4 +1,4 @@
-package ru.gooamoko.service;
+package ru.gooamoko.service.shoppingcard;
 
 import ru.gooamoko.model.CardItem;
 
@@ -12,18 +12,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Сервис корзины покупок.
  */
-public class ShoppingCardService {
+public class ConcurrentMapShoppingCardService implements ShoppingCardService {
     private final ConcurrentMap<UUID, List<CardItem>> cards = new ConcurrentHashMap<>();
 
 
+    @Override
     public void addItem(UUID userId, CardItem cardItem) {
         cards.compute(userId, (k, v) -> addItemToList(v, cardItem));
     }
 
+    @Override
     public void removeItem(UUID userId, CardItem cardItem) {
         cards.compute(userId, (k, v) -> removeItemFromList(v, cardItem));
     }
 
+    @Override
     public List<CardItem> getItems(UUID userId) {
         List<CardItem> cardItems = new LinkedList<>();
         List<CardItem> items = cards.get(userId);

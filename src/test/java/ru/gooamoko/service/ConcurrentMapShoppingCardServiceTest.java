@@ -2,6 +2,8 @@ package ru.gooamoko.service;
 
 import org.junit.jupiter.api.Test;
 import ru.gooamoko.model.CardItem;
+import ru.gooamoko.service.shoppingcard.ConcurrentMapShoppingCardService;
+import ru.gooamoko.service.shoppingcard.ShoppingCardService;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -11,9 +13,9 @@ import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ShoppingCardServiceTest {
+class ConcurrentMapShoppingCardServiceTest {
     private static final int THREADS_COUNT = 10;
-    private final ShoppingCardService service = new ShoppingCardService();
+    private final ShoppingCardService service = new ConcurrentMapShoppingCardService();
 
     @Test
     public void testAddItemsConcurrent() throws Exception {
