@@ -1,4 +1,4 @@
-package ru.gooamoko.model;
+package ru.gooamoko.account;
 
 import java.math.BigDecimal;
 import java.util.concurrent.locks.Lock;
@@ -7,21 +7,19 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Класс упрощенного лицевого счета.
  */
-public class PersonalAccount {
+public class LockPersonalAccount implements PersonalAccount {
     private final Lock accountLock = new ReentrantLock();
     private BigDecimal fund; // Сумма на счете
 
-    public PersonalAccount(BigDecimal fund) {
+    public LockPersonalAccount(BigDecimal fund) {
         this.fund = fund;
     }
 
-    public PersonalAccount() {
+    public LockPersonalAccount() {
         this.fund = BigDecimal.ZERO;
     }
 
-    /**
-     * Зачисление средств на счет.
-     */
+    @Override
     public BigDecimal add(BigDecimal amount) {
         try {
             accountLock.lock();
@@ -33,9 +31,7 @@ public class PersonalAccount {
         return fund;
     }
 
-    /**
-     * Списание средств со счета.
-     */
+    @Override
     public BigDecimal subtract(BigDecimal amount) {
         try {
             accountLock.lock();
@@ -49,25 +45,13 @@ public class PersonalAccount {
         return fund;
     }
 
-    /**
-     * Переводим с одного счета на другой.
-     */
+    @Override
     public BigDecimal transferFrom(PersonalAccount from, BigDecimal amount) {
-        try {
-            from.subtract(amount);
-            accountLock.lock();
-            fund = fund.add(amount);
-        } finally {
-            accountLock.unlock();
-        }
-        return fund;
+        from.subtract(amount);
+        return add(amount);
     }
 
-    /**
-     * Возвращает количество средств на счете.
-     *
-     * @return количество средств.
-     */
+    @Override
     public BigDecimal getFund() {
         return fund;
     }
