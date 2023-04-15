@@ -1,8 +1,6 @@
-package ru.gooamoko.model;
+package ru.gooamoko.account;
 
 import org.junit.jupiter.api.Test;
-import ru.gooamoko.account.LockPersonalAccount;
-import ru.gooamoko.account.PersonalAccount;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CountDownLatch;
