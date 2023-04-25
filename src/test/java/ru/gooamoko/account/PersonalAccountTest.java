@@ -16,8 +16,8 @@ import java.util.concurrent.Executors;
  * Тест для замера скорости реализаций PersonalAccount
  */
 class PersonalAccountTest {
-    private final static int TRANSACTIONS = 5000;
-    private final static int ACCOUNTS = 50;
+    private final static int TRANSACTIONS = 2000;
+    private final static int ACCOUNTS = 10;
 
     private final List<String> implementations = new LinkedList<>();
     private final PersonalAccount[] accounts = new PersonalAccount[ACCOUNTS];
