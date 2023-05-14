@@ -27,30 +27,30 @@ public class ConcurrentListTest {
         pool.shutdown();
     }
 
-//    @Test
-//    public void testArrayList() {
-//        doTest(new ArrayList<>());
-//    }
-//
-//    @Test
-//    public void testLinkedList() {
-//        doTest(new LinkedList<>());
-//    }
-//
-//    @Test
-//    public void testCopyOnWriteArrayList() {
-//        doTest(new CopyOnWriteArrayList<>());
-//    }
-//
-//    @Test
-//    public void testSynchronizedArrayList() {
-//        doTest(Collections.synchronizedList(new ArrayList<>()));
-//    }
-//
-//    @Test
-//    public void testSynchronizedLinkedList() {
-//        doTest(Collections.synchronizedList(new LinkedList<>()));
-//    }
+    @Test
+    public void testArrayList() {
+        doTest(new ArrayList<>());
+    }
+
+    @Test
+    public void testLinkedList() {
+        doTest(new LinkedList<>());
+    }
+
+    @Test
+    public void testCopyOnWriteArrayList() {
+        doTest(new CopyOnWriteArrayList<>());
+    }
+
+    @Test
+    public void testSynchronizedArrayList() {
+        doTest(Collections.synchronizedList(new ArrayList<>()));
+    }
+
+    @Test
+    public void testSynchronizedLinkedList() {
+        doTest(Collections.synchronizedList(new LinkedList<>()));
+    }
 
     @Test
     public void testAll() {
@@ -104,7 +104,7 @@ public class ConcurrentListTest {
             throw new RuntimeException(e);
         }
 
-        assertFalse(list.isEmpty());
+        assertFalse(list.isEmpty(), "Список пуст.");
         assertEquals(tasks, list.size(), "Размер списка отличается от ожидаемого.");
         for (int i = 1; i <= tasks; i++) {
             assertTrue(list.contains(i), "Список не содержит значение " + i);
